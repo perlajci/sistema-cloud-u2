@@ -7,7 +7,6 @@ function App() {
   const [pass, setPass] = useState('');
   const [darkMode, setDarkMode] = useState(false);
 
-  // Efecto para cambiar el tema globalmente
   useEffect(() => {
     if (darkMode) {
       document.documentElement.setAttribute('data-theme', 'dark');
@@ -64,8 +63,9 @@ function CrudSystem({ darkMode, setDarkMode }) {
   const [productos, setProductos] = useState([]);
   const [form, setForm] = useState({ ID: '', Nombre: '', Precio: '', Categoria: '', Stock: '' });
   const [busqueda, setBusqueda] = useState('');
+  const [categoriaFiltro, setCategoriaFiltro] = useState(''); // Nuevo estado para el filtro
   const [loading, setLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el Modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const API_URL = '/.netlify/functions/api';
 
@@ -101,11 +101,9 @@ function CrudSystem({ darkMode, setDarkMode }) {
     setLoading(true);
     if (form.ID) {
       await fetch(API_URL, { method: 'PUT', body: JSON.stringify(form) });
-      alert("✅ Registro actualizado exitosamente");
-      setIsModalOpen(false); // Cierra el modal al actualizar
+      setIsModalOpen(false);
     } else {
       await fetch(API_URL, { method: 'POST', body: JSON.stringify(form) });
-      alert("✅ Registro guardado en la nube");
     }
     setForm({ ID: '', Nombre: '', Precio: '', Categoria: '', Stock: '' });
     fetchProductos();
@@ -113,7 +111,7 @@ function CrudSystem({ darkMode, setDarkMode }) {
 
   const handleEdit = (prod) => {
     setForm(prod);
-    setIsModalOpen(true); // Abre el modal
+    setIsModalOpen(true);
   };
 
   const handleDelete = async (ID) => {
@@ -124,10 +122,19 @@ function CrudSystem({ darkMode, setDarkMode }) {
     }
   };
 
-  const productosFiltrados = productos.filter(p => 
-    p.Nombre.toLowerCase().includes(busqueda.toLowerCase()) || 
-    p.Categoria.toLowerCase().includes(busqueda.toLowerCase())
-  );
+  // Lógica de Dashboard y Filtros
+  const categoriasUnicas = [...new Set(productos.map(p => p.Categoria))];
+  
+  const productosFiltrados = productos.filter(p => {
+    const matchBusqueda = p.Nombre.toLowerCase().includes(busqueda.toLowerCase()) || 
+                          p.Categoria.toLowerCase().includes(busqueda.toLowerCase());
+    const matchCategoria = categoriaFiltro === '' || p.Categoria === categoriaFiltro;
+    return matchBusqueda && matchCategoria;
+  });
+
+  const totalProductos = productos.length;
+  const productosPocoStock = productos.filter(p => p.Stock < 10).length;
+  const valorTotal = productos.reduce((acc, p) => acc + (parseFloat(p.Precio) * parseInt(p.Stock)), 0);
 
   return (
     <div className="crud-container fade-in">
@@ -143,20 +150,53 @@ function CrudSystem({ darkMode, setDarkMode }) {
         </div>
       </header>
       
+      {/* MINI DASHBOARD */}
+      <div className="dashboard-cards">
+        <div className="card">
+          <span className="card-icon">📦</span>
+          <div className="card-info">
+            <h4>Total Registros</h4>
+            <p>{totalProductos}</p>
+          </div>
+        </div>
+        <div className="card alert-card">
+          <span className="card-icon">⚠️</span>
+          <div className="card-info">
+            <h4>Poco Stock (&lt;10)</h4>
+            <p className={productosPocoStock > 0 ? 'text-danger' : ''}>{productosPocoStock} artículos</p>
+          </div>
+        </div>
+        <div className="card">
+          <span className="card-icon">💰</span>
+          <div className="card-info">
+            <h4>Valor Inventario</h4>
+            <p>${valorTotal.toLocaleString()}</p>
+          </div>
+        </div>
+      </div>
+
       <div className="toolbar">
         <div className="search-wrapper">
           <span className="search-icon">🔍</span>
           <input 
             type="text" 
             className="search-bar"
-            placeholder="Buscar por nombre o categoría..." 
+            placeholder="Buscar por nombre..." 
             value={busqueda} 
             onChange={e => setBusqueda(e.target.value)} 
           />
         </div>
-        <div className="contador">
-          Registros Cloud: <strong>{productos.length}</strong>
-        </div>
+        {/* NUEVO FILTRO DE CATEGORÍAS */}
+        <select 
+          className="category-filter"
+          value={categoriaFiltro}
+          onChange={(e) => setCategoriaFiltro(e.target.value)}
+        >
+          <option value="">Todas las categorías</option>
+          {categoriasUnicas.map(cat => (
+            <option key={cat} value={cat}>{cat}</option>
+          ))}
+        </select>
       </div>
       
       <div className="main-content">
