@@ -1,173 +1,288 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
 body {
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
-  color: #333;
+  font-family: 'Inter', sans-serif;
+  background-color: #f7f9fc;
+  color: #111827;
   margin: 0;
   padding: 0;
   min-height: 100vh;
+}
+
+/* Login Minimalista */
+.login-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
 }
 
-/* Contenedores Principales */
-.login-container, .crud-container {
+.login-box {
   background: #ffffff;
   padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   width: 100%;
-  box-sizing: border-box;
-}
-
-.login-container {
-  max-width: 420px;
+  max-width: 360px;
   text-align: center;
 }
 
-.crud-container {
-  max-width: 950px;
-  margin: 40px;
-}
-
-h2 {
-  color: #2c3e50;
-  margin-bottom: 25px;
+.login-box h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
   font-weight: 600;
-  text-align: center;
+  color: #111827;
 }
 
-/* Formulario Login */
+.login-box p {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
-/* Inputs / Cajas de texto */
 input {
-  padding: 14px;
-  border: 2px solid #e1e5eb;
-  border-radius: 10px;
-  font-size: 15px;
-  transition: all 0.3s;
-  outline: none;
-  font-family: 'Poppins', sans-serif;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 input:focus {
-  border-color: #6c5ce7;
-  box-shadow: 0 0 8px rgba(108, 92, 231, 0.3);
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Botones */
 button {
-  padding: 14px;
-  background-color: #6c5ce7;
-  color: white;
+  font-family: 'Inter', sans-serif;
+  padding: 12px;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  transition: all 0.3s;
-  font-family: 'Poppins', sans-serif;
+  transition: all 0.2s;
 }
 
-button:hover {
-  background-color: #5a4bcf;
-  transform: translateY(-2px);
-}
-
-button:active {
-  transform: translateY(0);
-}
-
-/* Buscador */
-.buscador {
-  margin-bottom: 25px;
-}
-
-.buscador input {
-  width: 100%;
-  box-sizing: border-box;
-  background-color: #f8f9fa;
-}
-
-/* Formulario CRUD */
-.crud-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-bottom: 30px;
-  background: #f8faff;
-  padding: 25px;
-  border-radius: 12px;
-  border: 1px solid #e1e5eb;
-}
-
-.crud-form button {
-  grid-column: span 2;
+.login-form button {
+  background-color: #111827;
+  color: #ffffff;
   margin-top: 10px;
 }
 
-.btn-add { background-color: #00b894; }
-.btn-add:hover { background-color: #00a885; }
+.login-form button:hover {
+  background-color: #374151;
+}
 
-.btn-edit { background-color: #fdcb6e; color: #2d3436; }
-.btn-edit:hover { background-color: #e1b154; }
+/* Sistema CRUD Minimalista */
+.crud-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
 
-/* Tabla de Registros */
+.crud-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 20px;
+}
+
+.crud-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.btn-logout {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  color: #4b5563;
+}
+
+.btn-logout:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  max-width: 350px;
+}
+
+.contador {
+  font-size: 14px;
+  color: #4b5563;
+  background: #ffffff;
+  padding: 8px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.contador strong {
+  color: #111827;
+}
+
+/* Estructura dividida (Formulario izq, Tabla der) */
+.main-content {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 30px;
+}
+
+.form-section {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  height: fit-content;
+}
+
+.form-section h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.crud-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  color: #4b5563;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.btn-submit {
+  background: #10b981; /* Verde moderno */
+  color: #ffffff;
+  margin-top: 10px;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: #059669;
+}
+
+.btn-submit:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+.btn-update {
+  background: #3b82f6; /* Azul moderno para actualizar */
+}
+
+.btn-update:hover {
+  background: #2563eb;
+}
+
+.btn-cancel {
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-cancel:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* Tabla Minimalista */
+.table-section {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
 .tabla-productos {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  font-size: 14px;
 }
 
 .tabla-productos th, .tabla-productos td {
   padding: 16px;
-  border-bottom: 1px solid #f1f2f6;
   text-align: left;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .tabla-productos th {
-  background-color: #2d3436;
-  color: white;
-  font-weight: 600;
-  font-size: 14px;
+  background: #f9fafb;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 12px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
 }
 
 .tabla-productos tr:last-child td {
   border-bottom: none;
 }
 
-.tabla-productos tr:hover {
-  background-color: #f9faff;
+.id-cell {
+  color: #9ca3af;
+  font-family: monospace;
 }
 
-/* Botones en la Tabla */
+.badge {
+  background: #f3f4f6;
+  padding: 4px 10px;
+  border-radius: 9999px; /* Forma de píldora */
+  font-size: 12px;
+  color: #374151;
+  font-weight: 500;
+}
+
 .acciones {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
-.btn-small {
-  padding: 8px 14px;
+.btn-icon {
+  padding: 6px 12px;
   font-size: 13px;
-  border-radius: 8px;
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-weight: 500;
 }
 
-.btn-delete {
-  background-color: #d63031;
-}
+.btn-icon.edit { color: #3b82f6; }
+.btn-icon.edit:hover { background: #eff6ff; border-color: #bfdbfe; }
 
-.btn-delete:hover {
-  background-color: #c0392b;
+.btn-icon.delete { color: #ef4444; }
+.btn-icon.delete:hover { background: #fef2f2; border-color: #fecaca; }
+
+.loading, .empty-state {
+  padding: 50px;
+  text-align: center;
+  color: #6b7280;
 }
