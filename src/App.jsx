@@ -5,6 +5,16 @@ function App() {
   const [isLogged, setIsLogged] = useState(false);
   const [user, setUser] = useState('');
   const [pass, setPass] = useState('');
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Efecto para cambiar el tema globalmente
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  }, [darkMode]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -17,28 +27,45 @@ function App() {
 
   if (!isLogged) {
     return (
-      <div className="login-container">
-        <div className="login-box">
-          <h2>SISTEMA CLOUD</h2>
-          <p>Inicia sesión para continuar</p>
+      <div className="login-wrapper fade-in">
+        <button className="theme-toggle top-right" onClick={() => setDarkMode(!darkMode)}>
+          {darkMode ? '☀️ Modo Claro' : '🌙 Modo Oscuro'}
+        </button>
+        <div className="login-card">
+          <div className="avatar-circle">
+            <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </div>
           <form onSubmit={handleLogin} className="login-form">
-            <input type="text" placeholder="Usuario" value={user} onChange={e => setUser(e.target.value)} required />
-            <input type="password" placeholder="Contraseña" value={pass} onChange={e => setPass(e.target.value)} required />
-            <button type="submit">INICIAR SESIÓN</button>
+            <div className="input-group">
+              <span className="icon">👤</span>
+              <input type="text" placeholder="Usuario" value={user} onChange={e => setUser(e.target.value)} required />
+            </div>
+            <div className="input-group">
+              <span className="icon">🔒</span>
+              <input type="password" placeholder="Contraseña" value={pass} onChange={e => setPass(e.target.value)} required />
+            </div>
+            <div className="login-options">
+              <label><input type="checkbox" /> Recordarme</label>
+              <a href="#/" className="forgot-pass">¿Olvidaste tu contraseña?</a>
+            </div>
+            <button type="submit" className="btn-login">INICIAR SESIÓN</button>
           </form>
         </div>
       </div>
     );
   }
 
-  return <CrudSystem />;
+  return <CrudSystem darkMode={darkMode} setDarkMode={setDarkMode} />;
 }
 
-function CrudSystem() {
+function CrudSystem({ darkMode, setDarkMode }) {
   const [productos, setProductos] = useState([]);
   const [form, setForm] = useState({ ID: '', Nombre: '', Precio: '', Categoria: '', Stock: '' });
   const [busqueda, setBusqueda] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el Modal
 
   const API_URL = '/.netlify/functions/api';
 
@@ -66,7 +93,6 @@ function CrudSystem() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // FUNCIONALIDAD EXTRA D: Validación
     if(form.Precio <= 0 || form.Stock < 0) {
       alert("⚠️ El precio debe ser mayor a 0 y el stock no puede ser negativo.");
       return;
@@ -76,6 +102,7 @@ function CrudSystem() {
     if (form.ID) {
       await fetch(API_URL, { method: 'PUT', body: JSON.stringify(form) });
       alert("✅ Registro actualizado exitosamente");
+      setIsModalOpen(false); // Cierra el modal al actualizar
     } else {
       await fetch(API_URL, { method: 'POST', body: JSON.stringify(form) });
       alert("✅ Registro guardado en la nube");
@@ -84,10 +111,12 @@ function CrudSystem() {
     fetchProductos();
   };
 
-  const handleEdit = (prod) => setForm(prod);
+  const handleEdit = (prod) => {
+    setForm(prod);
+    setIsModalOpen(true); // Abre el modal
+  };
 
   const handleDelete = async (ID) => {
-    // ELIMINACIÓN CON CONFIRMACIÓN (Requisito cumplido)
     if (window.confirm("⚠️ ¿Estás seguro de que deseas eliminar este registro? Esta acción se reflejará en Google Sheets.")) {
       setLoading(true);
       await fetch(API_URL, { method: 'DELETE', body: JSON.stringify({ ID }) });
@@ -95,99 +124,149 @@ function CrudSystem() {
     }
   };
 
-  // FUNCIONALIDAD EXTRA A: Búsqueda
   const productosFiltrados = productos.filter(p => 
     p.Nombre.toLowerCase().includes(busqueda.toLowerCase()) || 
     p.Categoria.toLowerCase().includes(busqueda.toLowerCase())
   );
 
   return (
-    <div className="crud-container">
+    <div className="crud-container fade-in">
       <header className="crud-header">
-        <h2>Gestión de Inventario Cloud</h2>
-        <button className="btn-logout" onClick={() => window.location.reload()}>Cerrar Sesión</button>
+        <div className="header-titles">
+          <h2>Gestión de Inventario Cloud</h2>
+        </div>
+        <div className="header-actions">
+          <button className="theme-toggle" onClick={() => setDarkMode(!darkMode)}>
+            {darkMode ? '☀️ Claro' : '🌙 Oscuro'}
+          </button>
+          <button className="btn-logout" onClick={() => window.location.reload()}>Cerrar Sesión</button>
+        </div>
       </header>
       
       <div className="toolbar">
-        <input 
-          type="text" 
-          className="search-bar"
-          placeholder="🔍 Buscar por nombre o categoría..." 
-          value={busqueda} 
-          onChange={e => setBusqueda(e.target.value)} 
-        />
-        {/* FUNCIONALIDAD EXTRA E: Contador */}
+        <div className="search-wrapper">
+          <span className="search-icon">🔍</span>
+          <input 
+            type="text" 
+            className="search-bar"
+            placeholder="Buscar por nombre o categoría..." 
+            value={busqueda} 
+            onChange={e => setBusqueda(e.target.value)} 
+          />
+        </div>
         <div className="contador">
-          Total de registros en Sheets: <strong>{productos.length}</strong>
+          Registros Cloud: <strong>{productos.length}</strong>
         </div>
       </div>
       
       <div className="main-content">
+        {/* Formulario Lateral para Crear */}
         <div className="form-section">
-          <h3>{form.ID ? 'Editar Registro' : 'Nuevo Registro'}</h3>
+          <h3>Registrar Nuevo</h3>
           <form onSubmit={handleSubmit} className="crud-form">
             <div className="form-group">
-              <label>Nombre</label>
-              <input type="text" name="Nombre" value={form.Nombre} onChange={handleChange} required />
+              <label>Nombre del Producto</label>
+              <input type="text" name="Nombre" value={form.Nombre} onChange={handleChange} required disabled={isModalOpen}/>
             </div>
-            <div className="form-group">
-              <label>Precio ($)</label>
-              <input type="number" name="Precio" value={form.Precio} onChange={handleChange} required min="1" />
+            <div className="form-group grid-2">
+              <div>
+                <label>Precio ($)</label>
+                <input type="number" name="Precio" value={form.Precio} onChange={handleChange} required min="1" disabled={isModalOpen}/>
+              </div>
+              <div>
+                <label>Stock</label>
+                <input type="number" name="Stock" value={form.Stock} onChange={handleChange} required min="0" disabled={isModalOpen}/>
+              </div>
             </div>
             <div className="form-group">
               <label>Categoría</label>
-              <input type="text" name="Categoria" value={form.Categoria} onChange={handleChange} required />
+              <input type="text" name="Categoria" value={form.Categoria} onChange={handleChange} required disabled={isModalOpen}/>
             </div>
-            <div className="form-group">
-              <label>Stock</label>
-              <input type="number" name="Stock" value={form.Stock} onChange={handleChange} required min="0" />
-            </div>
-            <button type="submit" className={`btn-submit ${form.ID ? 'btn-update' : ''}`} disabled={loading}>
-              {loading ? 'Sincronizando...' : (form.ID ? 'Actualizar en la Nube' : 'Agregar a Google Sheets')}
+            <button type="submit" className="btn-submit" disabled={loading || isModalOpen}>
+              {loading && !isModalOpen ? 'Sincronizando...' : 'Agregar a Google Sheets'}
             </button>
-            {form.ID && (
-              <button type="button" className="btn-cancel" onClick={() => setForm({ ID: '', Nombre: '', Precio: '', Categoria: '', Stock: '' })}>
-                Cancelar Edición
-              </button>
-            )}
           </form>
         </div>
 
+        {/* Tabla de Registros */}
         <div className="table-section">
-          {loading && productos.length === 0 ? <p className="loading">Cargando datos desde Google Sheets...</p> : (
-            <table className="tabla-productos">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Nombre</th>
-                  <th>Precio</th>
-                  <th>Categoría</th>
-                  <th>Stock</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {productosFiltrados.length > 0 ? productosFiltrados.map((p, i) => (
-                  <tr key={i}>
-                    {/* Solo mostramos los últimos 4 dígitos del ID para que se vea limpio */}
-                    <td className="id-cell">{p.ID ? p.ID.substring(p.ID.length - 4) : '...'}</td>
-                    <td>{p.Nombre}</td>
-                    <td>${p.Precio}</td>
-                    <td><span className="badge">{p.Categoria}</span></td>
-                    <td>{p.Stock}</td>
-                    <td className="acciones">
-                      <button onClick={() => handleEdit(p)} className="btn-icon edit">Editar</button>
-                      <button onClick={() => handleDelete(p.ID)} className="btn-icon delete">Eliminar</button>
-                    </td>
+          {loading && productos.length === 0 ? <div className="loading-spinner">Cargando base de datos...</div> : (
+            <div className="table-responsive">
+              <table className="tabla-productos">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Categoría</th>
+                    <th>Stock</th>
+                    <th className="text-right">Acciones</th>
                   </tr>
-                )) : (
-                  <tr><td colSpan="6" className="empty-state">No se encontraron registros en la nube.</td></tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {productosFiltrados.length > 0 ? productosFiltrados.map((p, i) => (
+                    <tr key={i}>
+                      <td className="id-cell">{p.ID ? p.ID.substring(p.ID.length - 4) : '...'}</td>
+                      <td className="font-semibold">{p.Nombre}</td>
+                      <td className="price-cell">${p.Precio}</td>
+                      <td><span className="badge">{p.Categoria}</span></td>
+                      <td>
+                        <span className={`stock-badge ${p.Stock < 10 ? 'low-stock' : ''}`}>
+                          {p.Stock}
+                        </span>
+                      </td>
+                      <td className="acciones text-right">
+                        <button onClick={() => handleEdit(p)} className="btn-icon edit">Editar</button>
+                        <button onClick={() => handleDelete(p.ID)} className="btn-icon delete">Eliminar</button>
+                      </td>
+                    </tr>
+                  )) : (
+                    <tr><td colSpan="6" className="empty-state">No hay registros coincidentes.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>
+
+      {/* MODAL DE EDICIÓN */}
+      {isModalOpen && (
+        <div className="modal-overlay fade-in">
+          <div className="modal-content slide-up">
+            <h3>Modificar Registro</h3>
+            <p className="modal-subtitle">Actualizando datos en la nube</p>
+            <form onSubmit={handleSubmit} className="crud-form">
+              <div className="form-group">
+                <label>Nombre</label>
+                <input type="text" name="Nombre" value={form.Nombre} onChange={handleChange} required />
+              </div>
+              <div className="form-group grid-2">
+                <div>
+                  <label>Precio ($)</label>
+                  <input type="number" name="Precio" value={form.Precio} onChange={handleChange} required min="1" />
+                </div>
+                <div>
+                  <label>Stock</label>
+                  <input type="number" name="Stock" value={form.Stock} onChange={handleChange} required min="0" />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Categoría</label>
+                <input type="text" name="Categoria" value={form.Categoria} onChange={handleChange} required />
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="btn-cancel" onClick={() => { setIsModalOpen(false); setForm({ ID: '', Nombre: '', Precio: '', Categoria: '', Stock: '' }); }}>
+                  Cancelar
+                </button>
+                <button type="submit" className="btn-update" disabled={loading}>
+                  {loading ? 'Actualizando...' : 'Guardar Cambios'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
