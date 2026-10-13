@@ -1,19 +1,173 @@
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; }
-.login-container, .crud-container { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-.login-container { max-width: 400px; text-align: center; }
-.login-form { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
-input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
-button { padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; }
-button:hover { background-color: #0056b3; }
-.buscador { margin-bottom: 20px; }
-.buscador input { width: 100%; box-sizing: border-box; }
-.crud-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 30px; }
-.crud-form button { grid-column: span 2; }
-.btn-add { background-color: #28a745; } .btn-add:hover { background-color: #218838; }
-.btn-edit { background-color: #ffc107; color: black; } .btn-edit:hover { background-color: #e0a800; }
-.tabla-productos { width: 100%; border-collapse: collapse; margin-top: 10px; }
-.tabla-productos th, .tabla-productos td { padding: 12px; border: 1px solid #ddd; text-align: left; }
-.tabla-productos th { background-color: #007bff; color: white; }
-.acciones { display: flex; gap: 5px; }
-.btn-small { padding: 5px 10px; font-size: 14px; }
-.btn-delete { background-color: #dc3545; } .btn-delete:hover { background-color: #c82333; }
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+  color: #333;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Contenedores Principales */
+.login-container, .crud-container {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.login-container {
+  max-width: 420px;
+  text-align: center;
+}
+
+.crud-container {
+  max-width: 950px;
+  margin: 40px;
+}
+
+h2 {
+  color: #2c3e50;
+  margin-bottom: 25px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Formulario Login */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Inputs / Cajas de texto */
+input {
+  padding: 14px;
+  border: 2px solid #e1e5eb;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.3s;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+}
+
+input:focus {
+  border-color: #6c5ce7;
+  box-shadow: 0 0 8px rgba(108, 92, 231, 0.3);
+}
+
+/* Botones */
+button {
+  padding: 14px;
+  background-color: #6c5ce7;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s;
+  font-family: 'Poppins', sans-serif;
+}
+
+button:hover {
+  background-color: #5a4bcf;
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Buscador */
+.buscador {
+  margin-bottom: 25px;
+}
+
+.buscador input {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f8f9fa;
+}
+
+/* Formulario CRUD */
+.crud-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 30px;
+  background: #f8faff;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid #e1e5eb;
+}
+
+.crud-form button {
+  grid-column: span 2;
+  margin-top: 10px;
+}
+
+.btn-add { background-color: #00b894; }
+.btn-add:hover { background-color: #00a885; }
+
+.btn-edit { background-color: #fdcb6e; color: #2d3436; }
+.btn-edit:hover { background-color: #e1b154; }
+
+/* Tabla de Registros */
+.tabla-productos {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.tabla-productos th, .tabla-productos td {
+  padding: 16px;
+  border-bottom: 1px solid #f1f2f6;
+  text-align: left;
+}
+
+.tabla-productos th {
+  background-color: #2d3436;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tabla-productos tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla-productos tr:hover {
+  background-color: #f9faff;
+}
+
+/* Botones en la Tabla */
+.acciones {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-small {
+  padding: 8px 14px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+.btn-delete {
+  background-color: #d63031;
+}
+
+.btn-delete:hover {
+  background-color: #c0392b;
+}
